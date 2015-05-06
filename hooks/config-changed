@@ -1,0 +1,41 @@
+#!/bin/bash
+# config-changed occurs everytime a new configuration value is updated (juju set)
+
+set -eu
+
+# we have 2 config options: project, port
+
+project=$(config-get project)
+port=$(config-get port)
+
+projectdirectory=$(echo $project | awk -F'/' '{print $5}')
+app_path="/tmp/$projectdirectory"
+
+# We want to be idempotent
+if [[ -z "app_path" ]]; then
+    echo "No configured application to deploy - doing nothing"
+    exit 0
+fi
+
+if [ ! -d $app_path ]; then
+   git clone $project $app_path
+else
+    cd $app_path
+    git pull origin master
+    cd $CHARM_DIR
+fi
+
+if [ -z '$port' ]; then
+  echo "No configure port, doing nothing"
+  exit 0
+fi
+
+if [ -f docker_process ]; then
+    docker kill $(cat docker_process)
+    rm docker_process
+fi
+
+docker_pid=$(docker run -d -p $port:80 -v $app_path:/usr/share/nginx/html:ro nginx)
+echo $docker_pid > docker_process
+
+open-port $port

@@ -1,0 +1,16 @@
+name: nginx-docker
+summary: Deploys a nginx website in docker
+maintainer: Charles Butler <charles.butler@ubuntu.com>
+description: |
+    Installs docker and fetches the nginx image - allowing you to clone a
+    website into the docker container, and serve with NGINX
+tags:
+  - container
+  - website
+subordinate: false
+provides:
+  website:
+    interface: http
+requires:
+  database:
+    interface: mysql

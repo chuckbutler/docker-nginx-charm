@@ -1,0 +1,10 @@
+options:
+  project:
+    type: string
+    default: "https://github.com/groovyobject/ChoicePoolsv3.git"
+    description: "Project to clone, and run"
+  port:
+    type: int
+    default: 8000
+    description: "port to run the nginx container on"
+

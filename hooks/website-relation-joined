@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+relation-set host=$(unit-get private-address)
+relation-set port=$(config-get port)
+
